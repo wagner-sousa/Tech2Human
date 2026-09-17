@@ -1,0 +1,9 @@
+# Kilo internal
+.kilo/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
