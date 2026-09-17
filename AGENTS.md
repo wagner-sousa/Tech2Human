@@ -15,6 +15,7 @@ Everything else is documentation (`README.md`, `LICENSE`).
 - **`SKILL.md` is the single source of truth** for plugin behavior. All translation rules, output modes (`--full`, `--response`), hard rules, safety constraints, and examples live there. Changes to plugin behavior = changes to `SKILL.md`.
 - **`plugin.json` must stay in `.claude-plugin/`** — this path is required by the Claude Code plugin system.
 - **Version** lives only in `plugin.json` (`"version": "1.1.0"`). Update it there when making releases.
+- **`.kilo/` is gitignored** and must never be committed. It was untracked in commit `chore: remove .kilo/ from tracking`.
 
 ## Structure
 
@@ -32,6 +33,13 @@ LICENSE                      # MIT
 - Hard rules (section "Hard rules", 11 items) and safety rules are numbered. Preserve numbering when editing.
 - Examples at the end of `SKILL.md` serve as few-shot prompts for the LLM. They are functional, not just documentation.
 - Word limits: simple mode ≤ 80 words, full mode ≤ 200 words (rule 9).
+
+## Invocation naming
+
+- Canonical command: `/tech2human:tech2human` (plugin-name:skill-name).
+- Bare shortcut: `/tech2human` also works when no other command claims that name.
+- The `name: tech2human` in `SKILL.md` frontmatter **must stay** — removing it causes cached installs to fall back to a version-string name per Claude Code docs.
+- Plugin skills are always namespaced; the redundant look is by design.
 
 ## Conventions
 
