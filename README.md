@@ -18,13 +18,24 @@ The skill preserves commands, paths, error strings, and values needed to take ac
 
 ## Installation
 
-Load the plugin for a local Claude Code session:
+### Local development (load from folder)
+
+1. Open the `/plugins` menu in Claude Code.
+2. Select "Install from folder…" and choose the `tech2human/` directory.
+
+### Marketplace (when published)
+
+```bash
+claude plugins install <marketplace-name>
+```
+
+### Test with a local clone (advanced)
+
+Run Claude Code with the plugin directory loaded for the current session:
 
 ```bash
 claude --plugin-dir ./tech2human
 ```
-
-For distribution through a plugin marketplace, use the standard Claude Code plugin installation flow.
 
 ## Usage
 
@@ -59,8 +70,8 @@ Online services limit how many requests a person or system can make in a period 
 ### What to do
 
 1. Wait a few minutes and try again.
-2. If it happens repeatedly, ask the person who manages the system to check for repeated requests.
-3. If the service is yours, ask its provider about the request limit.
+2. If it happens repeatedly, check for a process or script that is sending the same request in a loop.
+3. If the service is yours, ask its provider about the request limit and how to increase it.
 
 ## Design principles
 
