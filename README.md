@@ -19,7 +19,7 @@ It provides **four output modes** controlled by flags at the start of the input:
 
 ### Client-safe by default in `--response` mode
 
-When using `--response`, the output automatically hides internal details such as server hostnames, IP addresses, file paths, and implementation specifics — replacing them with generic references like "o serviço" or "o sistema".
+When using `--response`, the output automatically hides internal details such as server hostnames, IP addresses, file paths, and implementation specifics — replacing them with generic references like "the service" or "the system" (adapted to the user's language).
 
 The response language follows the user's language. For example, an English error with a Portuguese question receives a Portuguese explanation.
 
