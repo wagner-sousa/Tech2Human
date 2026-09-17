@@ -34,7 +34,7 @@ claude plugins install <marketplace-name>
 Run Claude Code with the plugin directory loaded for the current session:
 
 ```bash
-claude --plugin-dir ./tech2human
+claude --plugin-dir ./Tech2Human
 ```
 
 ## Usage
