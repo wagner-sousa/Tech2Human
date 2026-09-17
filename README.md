@@ -14,7 +14,7 @@ It provides **four output modes** controlled by flags at the start of the input:
 |-------|--------|------|----------|
 | *(none)* | Single paragraph | Neutral translation | Internal notes, agent adaptation |
 | `--response` | Single paragraph | Third-person impersonal, client-safe | Ticket reply, email to client, status page |
-| `--full` | Three sections (What/Why/What to do) | Neutral translation | Internal runbooks, detailed documentation |
+| `--full` | Three sections (O que aconteceu/Por que aconteceu/O que fazer) | Neutral translation | Internal runbooks, detailed documentation |
 | `--response --full` | Three sections | Third-person impersonal, client-safe | Formal incident report for client |
 
 ### Client-safe by default in `--response` mode
