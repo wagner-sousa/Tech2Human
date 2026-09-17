@@ -1,0 +1,10 @@
+{
+  "name": "tech2human",
+  "description": "Translates technical IT errors into plain language anyone can understand. Paste the error, get a clear explanation.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Wagner Sousa"
+  },
+  "repository": "https://github.com/wagner-sousa/tech2human",
+  "license": "MIT"
+}
