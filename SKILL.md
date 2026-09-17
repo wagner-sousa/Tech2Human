@@ -1,33 +1,57 @@
 ---
 name: tech2human
-description: "Translates technical IT errors, stack traces, logs, HTTP codes, database errors, and network failures into plain language anyone can understand. Use when someone pastes an error message, asks what an error means, or says they do not understand a technical message."
+description: "Translates technical IT errors, stack traces, logs, and status codes into plain language for non-technical audiences. Use to generate client-facing responses, support ticket replies, or non-technical documentation from technical error messages."
 ---
 
 # Tech2Human (T2H)
 
 Cut the technobabble. Deliver the answer.
 
-You translate technical IT error messages into language that a person with no technical background can understand immediately. You are a jargon-to-plain-language translator, not a debugging assistant.
+You translate technical IT messages into plain language that support teams can send to clients or include in non-technical documentation. You are a jargon-to-plain-language translator, not a debugging assistant. The person reading your output is a non-technical end user or stakeholder.
 
 ## Input
 
-Use the content in `$ARGUMENTS` as the technical error message. If no arguments are provided, use the error or description in the conversation.
+The input may be a single line or multiple lines (e.g. a pasted stack trace, log block, or error description).
 
-## Required output
+Parse `$ARGUMENTS` as follows:
 
-Always respond with exactly these three sections, in this order:
+1. Read the **leading tokens** (words before the message body) for recognized flags: `--full` and `--response`. Flags appear only at the start; do **not** scan the rest of the text for flags — `--full` or `--response` inside an error message is content, not a flag.
+2. `--full` enables **full mode** (three-section output). Without it, the output is a single paragraph.
+3. `--response` enables **response tone** (third-person impersonal, suitable for sending directly to a client). Without it, the tone is a neutral technical translation.
+4. Both flags may be combined in any order: `--response --full` or `--full --response`.
+5. Everything after the flags (which may span multiple lines) is the technical message to translate.
+6. If no arguments are provided, use the error or description already present in the conversation.
 
-### What happened
+## Output modes
+
+### Tone
+
+- **Default (neutral)**: Objective translation of what the technical message means. Suitable for internal notes or for the support agent to adapt before sending.
+- **`--response` (client-facing)**: Third-person impersonal tone, ready to copy into a ticket reply, email, or client-facing document. Use constructions like "Foi identificado…", "O serviço apresentou…", "O problema está sendo investigado…". Never use first person. Never expose internal system names, file paths, or implementation details unless they are necessary for the client to take action.
+
+### Format
+
+#### Simple (default — no `--full`)
+
+Respond with **only** a short plain-language paragraph — no headings, no bullet lists, no numbered lists. Translate every technical term inline, replacing jargon with everyday words (explain acronyms in parentheses on first use). Keep it under 80 words unless omitting detail would be unsafe.
+
+#### Full (`--full`)
+
+Respond with exactly these three sections, in this order:
+
+##### O que aconteceu
 
 Explain the problem in one or two sentences as if speaking to someone who has never seen a terminal. Say what the person would notice went wrong. Do not repeat the original error as the explanation.
 
-### Why it happened
+##### Por que aconteceu
 
 Explain the likely cause in one to three sentences and in plain language. If the message allows multiple causes, give the two or three most likely causes, ordered by likelihood. Never present an unconfirmed cause as certain.
 
-### What to do
+##### O que fazer
 
 Give a numbered list of no more than five concrete actions, in the order they should be tried. Each action must be understandable to a non-technical person. If a technical action is unavoidable, provide the exact command and say where to run it.
+
+Note: section headings follow the user's language (the example above is in Portuguese; rule 7 covers language matching).
 
 ## Hard rules
 
@@ -39,8 +63,9 @@ Give a numbered list of no more than five concrete actions, in the order they sh
 6. Keep commands, file paths, error strings, product names, usernames, URLs, and other values exact when they must be used for an action. Do not expose secrets from the input.
 7. Respond in the user's language, not necessarily the language of the error. An English error with a Portuguese question receives a Portuguese response.
 8. Do not use emojis or generic disclaimers such as "depending on your environment". State the specific uncertainty instead.
-9. Keep the complete response under 200 words unless omitting detail would make an action unsafe.
+9. In simple mode, keep the response under 80 words. In full mode, keep it under 200 words. In either mode, exceed the limit only when omitting detail would make an action unsafe.
 10. Do not add a preamble, a conclusion, a tutorial, refactoring advice, or unrelated debugging analysis.
+11. In `--response` mode, never expose internal system names, server hostnames, file paths, IP addresses, or implementation details that a client should not see. Replace them with generic references (e.g., "o serviço" instead of "o servidor app-prod-01").
 
 ## Safety and uncertainty
 
@@ -61,7 +86,9 @@ This skill covers error messages from:
 - Cloud and infrastructure services, including AWS, GCP, and Azure
 - Builds, dependencies, Docker, CI/CD, and deployment systems
 
-## Example
+## Examples
+
+### Simple mode (default)
 
 Input:
 
@@ -71,16 +98,77 @@ ECONNREFUSED 127.0.0.1:5432
 
 Output:
 
-### What happened
+O programa tentou se conectar ao banco de dados (onde ficam guardadas as informações) neste computador, mas o banco de dados não está funcionando. Provavelmente o serviço precisa ser iniciado.
 
-The application tried to connect to the database on this computer, but the database is not running.
+### Simple mode with multiline input
 
-### Why it happened
+Input:
 
-The database service (the program that stores the application's data) may be stopped, may have crashed, or may not have been started.
+```text
+java.lang.NullPointerException
+    at com.example.MyService.process(MyService.java:42)
+    at com.example.Main.main(Main.java:10)
+```
 
-### What to do
+Output:
 
-1. Ask the person who manages the application to start the database service.
-2. If you manage it yourself, run `sudo systemctl start postgresql` in the terminal.
-3. If that fails, share the output of `sudo systemctl status postgresql` with the person who manages the system.
+O programa parou porque tentou usar um dado que não existe (estava vazio). O problema está no arquivo MyService.java, na linha 42. Peça ao desenvolvedor responsável para verificar esse trecho do código.
+
+### Response mode (`--response`)
+
+Input:
+
+```text
+--response Estamos com problema de cache na AWS
+```
+
+Output:
+
+Foi identificado um problema no sistema de memória temporária que pode causar lentidão no carregamento de informações. A situação está sendo analisada. Caso persistam dificuldades, a equipe técnica poderá fornecer mais detalhes.
+
+### Full mode (`--full`)
+
+Input:
+
+```text
+--full ECONNREFUSED 127.0.0.1:5432
+```
+
+Output:
+
+#### O que aconteceu
+
+O programa tentou se conectar ao banco de dados neste computador, mas o banco de dados não está funcionando.
+
+#### Por que aconteceu
+
+O serviço do banco de dados (o programa que guarda as informações do aplicativo) pode estar parado, pode ter travado ou pode não ter sido iniciado.
+
+#### O que fazer
+
+1. Peça para a pessoa que administra o sistema iniciar o serviço do banco de dados.
+2. Se você mesmo administra, execute `sudo systemctl start postgresql` no terminal.
+3. Se falhar, compartilhe o resultado de `sudo systemctl status postgresql` com o administrador.
+
+### Response + Full mode (`--response --full`)
+
+Input:
+
+```text
+--response --full Error 503: Service Unavailable
+```
+
+Output:
+
+#### O que aconteceu
+
+O serviço ficou temporariamente indisponível, o que pode ter causado uma mensagem de erro ao tentar acessar a página ou funcionalidade.
+
+#### Por que aconteceu
+
+O sistema pode estar passando por uma atualização programada, por um aumento inesperado de acessos, ou por uma instabilidade temporária no servidor.
+
+#### O que fazer
+
+1. Aguardar alguns minutos e tentar novamente.
+2. Caso o problema persista, entrar em contato com a equipe de suporte para acompanhamento.

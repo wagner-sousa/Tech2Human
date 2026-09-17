@@ -1,20 +1,27 @@
 # Tech2Human
 
-Translate technical errors into plain language.
+Translate technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.
 
-Tech2Human (T2H) is a Claude Code plugin that cuts through IT technobabble and explains what went wrong, why it likely happened, and what to do next. It is designed for people who need a clear answer without learning the technical vocabulary first.
+Tech2Human (T2H) is a Claude Code plugin that cuts through IT technobabble and explains what went wrong in language suitable for non-technical audiences. It is designed for support teams who need to communicate technical issues to clients or stakeholders without the technical vocabulary.
 
 ## What it does
 
 Tech2Human handles application errors, stack traces, HTTP status codes, database failures, network errors, operating system messages, cloud incidents, build failures, and deployment errors.
 
-Every response follows the same compact structure:
+It provides **four output modes** controlled by flags at the start of the input:
 
-1. **What happened**: the visible problem in plain language.
-2. **Why it happened**: the likely cause, including uncertainty when needed.
-3. **What to do**: up to five concrete next steps.
+| Flags | Format | Tone | Use case |
+|-------|--------|------|----------|
+| *(none)* | Single paragraph | Neutral translation | Internal notes, agent adaptation |
+| `--response` | Single paragraph | Third-person impersonal, client-safe | Ticket reply, email to client, status page |
+| `--full` | Three sections (What/Why/What to do) | Neutral translation | Internal runbooks, detailed documentation |
+| `--response --full` | Three sections | Third-person impersonal, client-safe | Formal incident report for client |
 
-The skill preserves commands, paths, error strings, and values needed to take action while explaining technical terms instead of repeating them.
+### Client-safe by default in `--response` mode
+
+When using `--response`, the output automatically hides internal details such as server hostnames, IP addresses, file paths, and implementation specifics — replacing them with generic references like "o serviço" or "o sistema".
+
+The response language follows the user's language. For example, an English error with a Portuguese question receives a Portuguese explanation.
 
 ## Installation
 
@@ -45,33 +52,42 @@ Invoke the skill directly with:
 /tech2human ECONNREFUSED 127.0.0.1:5432
 ```
 
+Or use flags for different output modes:
+
+```text
+# Client-ready response (single paragraph)
+/tech2human --response Estamos com problema de cache na AWS
+
+# Detailed internal analysis (three sections)
+/tech2human --full ECONNREFUSED 127.0.0.1:5432
+
+# Client-ready detailed incident report
+/tech2human --response --full Error 503: Service Unavailable
+```
+
 You can also paste an error in a conversation and let Claude Code invoke the skill automatically when the request matches its description.
 
-The response language follows the user's language. For example, an English error with a Portuguese question receives a Portuguese explanation.
+Flags must appear **before** the message body. Multi-line input (stack traces, logs) is supported:
+
+```text
+/tech2human --response
+java.lang.NullPointerException
+    at com.example.MyService.process(MyService.java:42)
+```
 
 ## Example
+
+### Client-facing response (`--response`)
 
 Input:
 
 ```text
-Error 429: Too Many Requests
+--response Estamos com problema de cache na AWS
 ```
 
 Output:
 
-### What happened
-
-The service temporarily blocked access because it received too many requests too quickly.
-
-### Why it happened
-
-Online services limit how many requests a person or system can make in a period of time. That limit was reached, possibly because something is repeating the same action or because the service is unusually busy.
-
-### What to do
-
-1. Wait a few minutes and try again.
-2. If it happens repeatedly, check for a process or script that is sending the same request in a loop.
-3. If the service is yours, ask its provider about the request limit and how to increase it.
+Foi identificado um problema no sistema de memória temporária que pode causar lentidão no carregamento de informações. A situação está sendo analisada. Caso persistam dificuldades, a equipe técnica poderá fornecer mais detalhes.
 
 ## Design principles
 
@@ -81,6 +97,7 @@ Online services limit how many requests a person or system can make in a period 
 - No unnecessary tutorials or debugging detours.
 - Short, direct, actionable responses.
 - Security and destructive-action warnings remain explicit.
+- **Client-safe by default in `--response` mode** — internal details are never exposed.
 
 ## Project structure
 
