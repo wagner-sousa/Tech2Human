@@ -30,10 +30,14 @@ The response language follows the user's language. For example, an English error
 1. Open the `/plugins` menu in Claude Code.
 2. Select "Install from folder…" and choose the `Tech2Human/` directory.
 
+To test changes during development, run `/reload-plugins` in Claude Code to pick up updates without restarting.
+
 ### Marketplace (when published)
 
-```bash
-claude plugins install <marketplace-name>
+Install from the plugin marketplace:
+
+```text
+/plugin install <marketplace-name>/<plugin-name>
 ```
 
 ### Test with a local clone (advanced)
@@ -44,25 +48,33 @@ Run Claude Code with the plugin directory loaded for the current session:
 claude --plugin-dir ./Tech2Human
 ```
 
+You can also load a plugin archive directly:
+
+```bash
+claude --plugin-dir ./Tech2Human.zip
+```
+
 ## Usage
 
-Invoke the skill directly with:
+Invoke the skill directly with the canonical plugin command:
 
 ```text
-/tech2human ECONNREFUSED 127.0.0.1:5432
+/tech2human:tech2human ECONNREFUSED 127.0.0.1:5432
 ```
+
+The bare `/tech2human` also works as a shortcut when no other command uses that name.
 
 Or use flags for different output modes:
 
 ```text
 # Client-ready response (single paragraph)
-/tech2human --response Estamos com problema de cache na AWS
+/tech2human:tech2human --response Estamos com problema de cache na AWS
 
 # Detailed internal analysis (three sections)
-/tech2human --full ECONNREFUSED 127.0.0.1:5432
+/tech2human:tech2human --full ECONNREFUSED 127.0.0.1:5432
 
 # Client-ready detailed incident report
-/tech2human --response --full Error 503: Service Unavailable
+/tech2human:tech2human --response --full Error 503: Service Unavailable
 ```
 
 You can also paste an error in a conversation and let Claude Code invoke the skill automatically when the request matches its description.
@@ -70,7 +82,7 @@ You can also paste an error in a conversation and let Claude Code invoke the ski
 Flags must appear **before** the message body. Multi-line input (stack traces, logs) is supported:
 
 ```text
-/tech2human --response
+/tech2human:tech2human --response
 java.lang.NullPointerException
     at com.example.MyService.process(MyService.java:42)
 ```
@@ -110,7 +122,7 @@ tech2human/
 └── README.md
 ```
 
-This is a single-skill plugin, so `SKILL.md` is located at the plugin root and the command is `/tech2human`.
+This is a single-skill plugin, so `SKILL.md` is located at the plugin root. Per the Claude Code plugin conventions, only `plugin.json` goes inside `.claude-plugin/`; all other directories (like `skills/`, `agents/`, `hooks/`) must be at the plugin root level.
 
 ## License
 
