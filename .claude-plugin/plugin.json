@@ -1,7 +1,7 @@
 {
   "name": "tech2human",
-  "description": "Translates technical IT errors into plain language anyone can understand. Paste the error, get a clear explanation.",
-  "version": "1.0.0",
+  "description": "Translates technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.",
+  "version": "1.1.0",
   "author": {
     "name": "Wagner Sousa"
   },
