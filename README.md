@@ -21,7 +21,7 @@ The skill preserves commands, paths, error strings, and values needed to take ac
 ### Local development (load from folder)
 
 1. Open the `/plugins` menu in Claude Code.
-2. Select "Install from folder…" and choose the `tech2human/` directory.
+2. Select "Install from folder…" and choose the `Tech2Human/` directory.
 
 ### Marketplace (when published)
 
