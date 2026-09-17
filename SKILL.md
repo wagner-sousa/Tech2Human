@@ -37,7 +37,7 @@ Respond with **only** a short plain-language paragraph — no headings, no bulle
 
 #### Full (`--full`)
 
-Respond with exactly these three sections, in this order (section headings follow the user's language; the examples below are in Portuguese):
+Respond with exactly these three sections, in this order (the section structure is fixed — What happened / Why it happened / What to do — but headings adapt to the user's language; examples below are in Portuguese):
 
 ##### O que aconteceu
 
