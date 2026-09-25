@@ -2,7 +2,6 @@
 
 ![Tech2Human cover](assets/cover.jpg)
 
-
 > Translate technical IT errors into clear, human-friendly language.
 
 ## About
