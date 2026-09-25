@@ -42,6 +42,7 @@ LICENSE               # MIT
 ## Invocation naming
 
 - Primary and user-facing command: `/tech2human` (use this in instructions and examples).
+- Canonical namespaced form: `/tech2human:tech2human` (useful when multiple plugins are loaded or a shortcut is ambiguous).
 - The `name: tech2human` in `skills/tech2human/SKILL.md` frontmatter **must stay** — removing it can cause cached installs to fall back to an unstable install-directory name.
 
 ## Publishing and updates
