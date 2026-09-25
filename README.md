@@ -2,7 +2,6 @@
 
 ![Tech2Human cover](assets/cover.jpg)
 
-[![skills.sh](https://skills.sh/b/wagner-sousa/Tech2Human)](https://skills.sh/wagner-sousa/Tech2Human)
 
 > Translate technical IT errors into clear, human-friendly language.
 
