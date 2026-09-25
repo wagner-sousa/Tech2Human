@@ -1,128 +1,152 @@
 # Tech2Human
 
-Translate technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.
+Tech2Human (T2H) translates technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.
 
-Tech2Human (T2H) is a Claude Code plugin that cuts through IT technobabble and explains what went wrong in language suitable for non-technical audiences. It is designed for support teams who need to communicate technical issues to clients or stakeholders without the technical vocabulary.
-
-## What it does
-
-Tech2Human handles application errors, stack traces, HTTP status codes, database failures, network errors, operating system messages, cloud incidents, build failures, and deployment errors.
-
-It provides **four output modes** controlled by flags at the start of the input:
-
-| Flags | Format | Tone | Use case |
-|-------|--------|------|----------|
-| *(none)* | Single paragraph | Neutral translation | Internal notes, agent adaptation |
-| `--response` | Single paragraph | Third-person impersonal, client-safe | Ticket reply, email to client, status page |
-| `--full` | Three sections (adapted to user's language) | Neutral translation | Internal runbooks, detailed documentation |
-| `--response --full` | Three sections | Third-person impersonal, client-safe | Formal incident report for client |
-
-### Client-safe by default in `--response` mode
-
-When using `--response`, the output automatically hides internal details such as server hostnames, IP addresses, file paths, and implementation specifics — replacing them with generic references like "the service" or "the system" (adapted to the user's language).
-
-The response language follows the user's language. For example, an English error with a Portuguese question receives a Portuguese explanation.
+It is a Claude Code plugin for support teams that need to explain application errors, stack traces, HTTP status codes, database failures, network errors, operating-system messages, cloud incidents, build failures, and deployment problems without technical jargon.
 
 ## Installation
 
-### Local development (load from folder)
+### GitHub marketplace
 
-1. Open the `/plugins` menu in Claude Code.
-2. Select "Install from folder…" and choose the `Tech2Human/` directory.
-
-To test changes during development, run `/reload-plugins` in Claude Code to pick up updates without restarting.
-
-### Marketplace (when published)
-
-Install from the plugin marketplace:
+The repository is both the plugin and its GitHub marketplace. Add the marketplace and install the plugin:
 
 ```text
-/plugin install <marketplace-name>/<plugin-name>
+/plugin marketplace add wagner-sousa/Tech2Human
+/plugin install tech2human@tech2human
 ```
 
-### Test with a local clone (advanced)
-
-Run Claude Code with the plugin directory loaded for the current session:
+CLI equivalent:
 
 ```bash
-claude --plugin-dir ./Tech2Human
+claude plugin marketplace add wagner-sousa/Tech2Human
+claude plugin install tech2human@tech2human
 ```
 
-You can also load a plugin archive directly:
+The marketplace entry uses the repository root as its plugin source, so updates are delivered when changes are committed and pushed.
+
+### Claude Code community marketplace
+
+After the plugin is approved in Anthropic's community marketplace, users can install it with:
+
+```text
+/plugin marketplace add anthropics/claude-plugins-community
+/plugin install tech2human@claude-community
+```
+
+### Local development
+
+Load the repository directly for the current Claude Code session:
 
 ```bash
-claude --plugin-dir ./Tech2Human.zip
+claude --plugin-dir .
 ```
+
+For local marketplace testing, run this from the repository root:
+
+```text
+/plugin marketplace add .
+/plugin install tech2human@tech2human
+```
+
+Run `/reload-plugins` after changing the plugin during development.
 
 ## Usage
 
-Invoke the skill directly with the canonical plugin command:
+Use the short command in instructions and everyday use:
+
+```text
+/tech2human ECONNREFUSED 127.0.0.1:5432
+```
+
+The fully namespaced form also works and is useful when multiple plugins are loaded or a shortcut is ambiguous:
 
 ```text
 /tech2human:tech2human ECONNREFUSED 127.0.0.1:5432
 ```
 
-The bare `/tech2human` also works as a shortcut when no other command uses that name.
+Flags must appear before the technical message. Both flags can be combined in either order.
 
-Or use flags for different output modes:
+### Output modes
+
+| Flags | Format | Tone | Use case |
+| --- | --- | --- | --- |
+| *(none)* | One paragraph | Neutral translation | Internal notes or support-agent adaptation |
+| `--response` | One paragraph | Third-person, client-safe | Ticket reply, email, or status update |
+| `--full` | Three sections | Neutral translation | Internal runbook or detailed documentation |
+| `--response --full` | Three sections | Third-person, client-safe | Formal client-facing incident report |
+
+Examples:
 
 ```text
-# Client-ready response (single paragraph)
-/tech2human:tech2human --response Estamos com problema de cache na AWS
+# Client-ready response
+/tech2human --response Estamos com problema de cache na AWS
 
-# Detailed internal analysis (three sections)
-/tech2human:tech2human --full ECONNREFUSED 127.0.0.1:5432
+# Detailed internal explanation
+/tech2human --full ECONNREFUSED 127.0.0.1:5432
 
-# Client-ready detailed incident report
-/tech2human:tech2human --response --full Error 503: Service Unavailable
+# Detailed client-facing incident report
+/tech2human --response --full Error 503: Service Unavailable
 ```
 
-You can also paste an error in a conversation and let Claude Code invoke the skill automatically when the request matches its description.
-
-Flags must appear **before** the message body. Multi-line input (stack traces, logs) is supported:
+Multi-line errors and stack traces are supported:
 
 ```text
-/tech2human:tech2human --response
+/tech2human --response
 java.lang.NullPointerException
     at com.example.MyService.process(MyService.java:42)
 ```
 
-## Example
+The response language follows the user's language. In `--response` mode, internal hostnames, IP addresses, file paths, and implementation details are replaced with generic references.
 
-### Client-facing response (`--response`)
+## Updates
 
-Input:
+For each release:
+
+1. Update `"version"` in `.claude-plugin/plugin.json`.
+2. Commit and push the changes.
+3. Ask users to refresh the marketplace:
 
 ```text
---response Estamos com problema de cache na AWS
+/plugin marketplace update tech2human
 ```
 
-Output:
+## Publication
 
-Foi identificado um problema no sistema de memória temporária que pode causar lentidão no carregamento de informações. A situação está sendo analisada. Caso persistam dificuldades, a equipe técnica poderá fornecer mais detalhes.
+Validate the repository before publishing:
 
-## Design principles
+```bash
+claude plugin validate .
+```
 
-- No invented causes.
-- No unexplained jargon or acronyms.
-- No generic disclaimers.
-- No unnecessary tutorials or debugging detours.
-- Short, direct, actionable responses.
-- Security and destructive-action warnings remain explicit.
-- **Client-safe by default in `--response` mode** — internal details are never exposed.
+Then submit the plugin for community-marketplace review through the Claude Console:
+
+```text
+https://platform.claude.com/plugins/submit
+```
+
+The GitHub marketplace is available as soon as the repository containing `.claude-plugin/marketplace.json` is pushed. Community-marketplace availability depends on Anthropic's review and safety screening.
 
 ## Project structure
 
 ```text
-tech2human/
+Tech2Human/
 ├── .claude-plugin/
-│   └── plugin.json
-├── SKILL.md
-├── LICENSE
-└── README.md
+│   ├── plugin.json
+│   └── marketplace.json
+├── skills/
+│   └── tech2human/
+│       └── SKILL.md
+├── README.md
+└── LICENSE
 ```
 
-This is a single-skill plugin, so `SKILL.md` is located at the plugin root. Per the Claude Code plugin conventions, only `plugin.json` goes inside `.claude-plugin/`; all other directories (like `skills/`, `agents/`, `hooks/`) must be at the plugin root level.
+Only the manifests belong in `.claude-plugin/`. The skill is stored under `skills/tech2human/` so Claude Code discovers it as the `tech2human` skill in the `tech2human` plugin namespace.
+
+## Official documentation
+
+- [Create plugins](https://code.claude.com/docs/en/plugins)
+- [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
+- [Plugins reference](https://code.claude.com/docs/en/plugins-reference)
 
 ## License
 
