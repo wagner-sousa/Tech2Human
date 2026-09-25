@@ -1,32 +1,47 @@
 # Tech2Human
 
-Tech2Human (T2H) translates technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.
+[![skills.sh](https://skills.sh/b/anthropics/skills)](https://skills.sh/anthropics/skills)
 
-It is a Claude Code plugin for support teams that need to explain application errors, stack traces, HTTP status codes, database failures, network errors, operating-system messages, cloud incidents, build failures, and deployment problems without technical jargon.
+> Translate technical IT errors into clear, human-friendly language.
+
+## About
+
+Tech2Human is a prompt-only Claude Code plugin for support teams and engineers who need to explain technical problems without unnecessary jargon.
+
+It translates application errors, stack traces, HTTP status codes, database failures, network errors, operating-system messages, cloud incidents, build failures, and deployment problems into language that non-technical audiences can understand.
+
+## Technologies
+
+- Claude Code plugin system
+- Markdown-based skill prompt
+- Claude Code plugin and marketplace manifests
+
+## Prerequisites
+
+- [Claude Code](https://code.claude.com/docs/en/overview)
+- Access to a Claude Code plugin marketplace or a local clone of this repository
 
 ## Installation
 
 ### GitHub marketplace
 
-The repository is both the plugin and its GitHub marketplace. Add the marketplace and install the plugin:
+The repository is both the plugin and its marketplace. Add the marketplace and install the plugin from Claude Code:
 
 ```text
 /plugin marketplace add wagner-sousa/Tech2Human
 /plugin install tech2human@tech2human
 ```
 
-CLI equivalent:
+The equivalent CLI commands are:
 
 ```bash
 claude plugin marketplace add wagner-sousa/Tech2Human
 claude plugin install tech2human@tech2human
 ```
 
-The marketplace entry uses the repository root as its plugin source, so updates are delivered when changes are committed and pushed.
-
 ### Claude Code community marketplace
 
-After the plugin is approved in Anthropic's community marketplace, users can install it with:
+After the plugin is approved in Anthropic's community marketplace, install it with:
 
 ```text
 /plugin marketplace add anthropics/claude-plugins-community
@@ -35,13 +50,13 @@ After the plugin is approved in Anthropic's community marketplace, users can ins
 
 ### Local development
 
-Load the repository directly for the current Claude Code session:
+Load the repository directly in the current Claude Code session:
 
 ```bash
 claude --plugin-dir .
 ```
 
-For local marketplace testing, run this from the repository root:
+For local marketplace testing, run these commands from the repository root:
 
 ```text
 /plugin marketplace add .
@@ -52,16 +67,10 @@ Run `/reload-plugins` after changing the plugin during development.
 
 ## Usage
 
-Use the short command in instructions and everyday use:
+Use `/tech2human` followed by a technical message, error, log, or stack trace:
 
 ```text
 /tech2human ECONNREFUSED 127.0.0.1:5432
-```
-
-The fully namespaced form also works and is useful when multiple plugins are loaded or a shortcut is ambiguous:
-
-```text
-/tech2human:tech2human ECONNREFUSED 127.0.0.1:5432
 ```
 
 Flags must appear before the technical message. Both flags can be combined in either order.
@@ -70,7 +79,7 @@ Flags must appear before the technical message. Both flags can be combined in ei
 
 | Flags | Format | Tone | Use case |
 | --- | --- | --- | --- |
-| *(none)* | One paragraph | Neutral translation | Internal notes or support-agent adaptation |
+| None | One paragraph | Neutral translation | Internal notes or support-agent adaptation |
 | `--response` | One paragraph | Third-person, client-safe | Ticket reply, email, or status update |
 | `--full` | Three sections | Neutral translation | Internal runbook or detailed documentation |
 | `--response --full` | Three sections | Third-person, client-safe | Formal client-facing incident report |
@@ -79,7 +88,7 @@ Examples:
 
 ```text
 # Client-ready response
-/tech2human --response Estamos com problema de cache na AWS
+/tech2human --response We are experiencing a cache issue in our cloud environment
 
 # Detailed internal explanation
 /tech2human --full ECONNREFUSED 127.0.0.1:5432
@@ -98,6 +107,34 @@ java.lang.NullPointerException
 
 The response language follows the user's language. In `--response` mode, internal hostnames, IP addresses, file paths, and implementation details are replaced with generic references.
 
+## Environment Variables
+
+Tech2Human does not require environment variables, API keys, databases, or application services. Never add secrets to the repository when using or developing the plugin.
+
+## Project Structure
+
+```text
+Tech2Human/
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── marketplace.json
+├── skills/
+│   └── tech2human/
+│       └── SKILL.md
+├── README.md
+└── LICENSE
+```
+
+The manifests belong in `.claude-plugin/`. The skill is stored under `skills/tech2human/` so Claude Code can discover it as the `tech2human` skill.
+
+## Tests and Validation
+
+This is a prompt-only plugin, so it has no build, dependency installation, or automated test suite. Validate the plugin before publishing:
+
+```bash
+claude plugin validate .
+```
+
 ## Updates
 
 For each release:
@@ -112,41 +149,13 @@ For each release:
 
 ## Publication
 
-Validate the repository before publishing:
-
-```bash
-claude plugin validate .
-```
-
-Then submit the plugin for community-marketplace review through the Claude Console:
+Submit the plugin for community-marketplace review through the Claude Console:
 
 ```text
 https://platform.claude.com/plugins/submit
 ```
 
-The GitHub marketplace is available as soon as the repository containing `.claude-plugin/marketplace.json` is pushed. Community-marketplace availability depends on Anthropic's review and safety screening.
-
-## Project structure
-
-```text
-Tech2Human/
-├── .claude-plugin/
-│   ├── plugin.json
-│   └── marketplace.json
-├── skills/
-│   └── tech2human/
-│       └── SKILL.md
-├── README.md
-└── LICENSE
-```
-
-Only the manifests belong in `.claude-plugin/`. The skill is stored under `skills/tech2human/` so Claude Code discovers it as the `tech2human` skill in the `tech2human` plugin namespace.
-
-## Official documentation
-
-- [Create plugins](https://code.claude.com/docs/en/plugins)
-- [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
-- [Plugins reference](https://code.claude.com/docs/en/plugins-reference)
+The GitHub marketplace is available after the repository containing `.claude-plugin/marketplace.json` is pushed. Community-marketplace availability depends on Anthropic's review and safety screening.
 
 ## License
 
