@@ -1,5 +1,7 @@
 # Tech2Human
 
+![Tech2Human cover](assets/cover.jpg)
+
 [![skills.sh](https://skills.sh/b/anthropics/skills)](https://skills.sh/anthropics/skills)
 
 > Translate technical IT errors into clear, human-friendly language.
