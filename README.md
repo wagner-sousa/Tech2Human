@@ -37,15 +37,6 @@ claude plugin marketplace add wagner-sousa/Tech2Human
 claude plugin install tech2human@tech2human
 ```
 
-### Claude Code community marketplace
-
-After the plugin is approved in Anthropic's community marketplace, install it with:
-
-```text
-/plugin marketplace add anthropics/claude-plugins-community
-/plugin install tech2human@claude-community
-```
-
 ### Local development
 
 Load the repository directly in the current Claude Code session:
