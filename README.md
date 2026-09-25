@@ -147,16 +147,6 @@ For each release:
 /plugin marketplace update tech2human
 ```
 
-## Publication
-
-Submit the plugin for community-marketplace review through the Claude Console:
-
-```text
-https://platform.claude.com/plugins/submit
-```
-
-The GitHub marketplace is available after the repository containing `.claude-plugin/marketplace.json` is pushed. Community-marketplace availability depends on Anthropic's review and safety screening.
-
 ## License
 
 MIT. See [LICENSE](LICENSE).
