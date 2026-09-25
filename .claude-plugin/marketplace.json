@@ -1,0 +1,31 @@
+{
+  "name": "tech2human",
+  "owner": {
+    "name": "Wagner Sousa",
+    "url": "https://github.com/wagner-sousa"
+  },
+  "description": "Translates IT errors into plain language for non-technical audiences.",
+  "plugins": [
+    {
+      "name": "tech2human",
+      "displayName": "Tech2Human",
+      "description": "Translates technical IT errors into plain language for client-facing responses, support tickets, and non-technical documentation.",
+      "source": "./",
+      "author": {
+        "name": "Wagner Sousa",
+        "url": "https://github.com/wagner-sousa"
+      },
+      "license": "MIT",
+      "homepage": "https://github.com/wagner-sousa/Tech2Human",
+      "repository": "https://github.com/wagner-sousa/Tech2Human",
+      "keywords": [
+        "translation",
+        "support",
+        "errors",
+        "plain-language",
+        "non-technical"
+      ],
+      "category": "productivity"
+    }
+  ]
+}

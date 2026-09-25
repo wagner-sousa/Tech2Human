@@ -2,31 +2,36 @@
 
 ## What this repo is
 
-Tech2Human (T2H) is a **prompt-only Claude Code plugin** — no source code, no build, no tests. The entire plugin is two files:
+Tech2Human (T2H) is a **prompt-only Claude Code plugin** — no source code, no build, and no tests. The plugin consists of:
 
-- `SKILL.md` — the skill prompt (input parsing, output rules, examples). This is the product.
+- `skills/tech2human/SKILL.md` — the skill prompt (input parsing, output rules, examples). This is the product.
 - `.claude-plugin/plugin.json` — plugin manifest (name, version, metadata).
+- `.claude-plugin/marketplace.json` — GitHub marketplace catalog used to distribute the plugin.
 
 Everything else is documentation (`README.md`, `LICENSE`).
 
 ## Key constraints
 
 - **No build/lint/test commands exist.** There is nothing to compile or run.
-- **`SKILL.md` is the single source of truth** for plugin behavior. All translation rules, output modes (`--full`, `--response`), hard rules, safety constraints, and examples live there. Changes to plugin behavior = changes to `SKILL.md`.
-- **`plugin.json` must stay in `.claude-plugin/`** — this path is required by the Claude Code plugin system.
-- **Version** lives only in `plugin.json` (`"version": "1.1.0"`). Update it there when making releases.
+- **`skills/tech2human/SKILL.md` is the single source of truth** for plugin behavior. All translation rules, output modes (`--full`, `--response`), hard rules, safety constraints, and examples live there. Changes to plugin behavior = changes to this file.
+- **`plugin.json` and `marketplace.json` must stay in `.claude-plugin/`** — this path is required by the Claude Code plugin system.
+- **Version** lives in `plugin.json` (`"version": "1.1.0"`). Update it there when making releases.
 - **`.kilo/` is gitignored** and must never be committed. It was untracked in commit `chore: remove .kilo/ from tracking`.
 
 ## Structure
 
-```
-.claude-plugin/plugin.json   # plugin manifest (name, version, repo URL)
-SKILL.md                     # skill prompt — all behavior lives here
-README.md                    # user-facing docs
-LICENSE                      # MIT
+```text
+.claude-plugin/
+├── plugin.json       # plugin manifest (name, version, metadata)
+└── marketplace.json  # GitHub marketplace catalog
+skills/
+└── tech2human/
+    └── SKILL.md      # skill prompt — all behavior lives here
+README.md             # user-facing docs
+LICENSE               # MIT
 ```
 
-## Editing `SKILL.md`
+## Editing the skill
 
 - The YAML front matter (`name`, `description`) is parsed by the plugin loader. Keep it valid YAML between the `---` fences.
 - Output modes are controlled by flag combinations (`--full`, `--response`). The four mode matrix is documented in both `SKILL.md` and `README.md` — keep them in sync.
@@ -36,10 +41,17 @@ LICENSE                      # MIT
 
 ## Invocation naming
 
-- Canonical command: `/tech2human:tech2human` (plugin-name:skill-name).
-- Bare shortcut: `/tech2human` also works when no other command claims that name.
-- The `name: tech2human` in `SKILL.md` frontmatter **must stay** — removing it causes cached installs to fall back to a version-string name per Claude Code docs.
-- Plugin skills are always namespaced; the redundant look is by design.
+- Primary command: `/tech2human` (use this in user-facing instructions and examples).
+- Canonical namespaced form: `/tech2human:tech2human` (useful when multiple plugins are loaded or a shortcut is ambiguous).
+- The `name: tech2human` in `skills/tech2human/SKILL.md` frontmatter **must stay** — removing it can cause cached installs to fall back to an unstable install-directory name.
+- Plugin skills are namespaced; the redundant-looking namespaced form is by design.
+
+## Publishing and updates
+
+- Validate before publishing: `claude plugin validate .`.
+- The repository is both the plugin and its GitHub marketplace. The marketplace entry uses `"source": "./"` to install the plugin from the repository root.
+- For a release, update `plugin.json` version, commit and push the changes, then tell users to run `/plugin marketplace update tech2human`.
+- Community marketplace submissions use `https://platform.claude.com/plugins/submit`.
 
 ## Conventions
 
