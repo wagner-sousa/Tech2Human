@@ -80,7 +80,7 @@ Flags must appear before the technical message. Both flags can be combined in ei
 
 | Flags | Format | Tone | Use case |
 | --- | --- | --- | --- |
-| None | One paragraph | Neutral translation | Internal notes or support-agent adaptation |
+| *(none)* | One paragraph | Neutral translation | Internal notes or support-agent adaptation |
 | `--response` | One paragraph | Third-person, client-safe | Ticket reply, email, or status update |
 | `--full` | Three sections | Neutral translation | Internal runbook or detailed documentation |
 | `--response --full` | Three sections | Third-person, client-safe | Formal client-facing incident report |
