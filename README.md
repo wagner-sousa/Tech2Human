@@ -2,8 +2,6 @@
 
 ![Tech2Human cover](assets/cover.jpg)
 
-> Translate technical IT errors into clear, human-friendly language.
-
 ## About
 
 Tech2Human is a prompt-only Claude Code plugin for support teams and engineers who need to explain technical problems without unnecessary jargon.
