@@ -99,24 +99,6 @@ java.lang.NullPointerException
 
 The response language follows the user's language. In `--response` mode, internal hostnames, IP addresses, file paths, and implementation details are replaced with generic references.
 
-## Environment Variables
-
-Tech2Human does not require environment variables, API keys, databases, or application services. Never add secrets to the repository when using or developing the plugin.
-
-## Project Structure
-
-```text
-Tech2Human/
-├── .claude-plugin/
-│   ├── plugin.json
-│   └── marketplace.json
-├── skills/
-│   └── tech2human/
-│       └── SKILL.md
-├── README.md
-└── LICENSE
-```
-
 The manifests belong in `.claude-plugin/`. The skill is stored under `skills/tech2human/` so Claude Code can discover it as the `tech2human` skill.
 
 ## Tests and Validation
