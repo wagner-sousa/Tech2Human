@@ -1,8 +1,8 @@
 # Tech2Human
 
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
-![skills.sh](https://skills.sh/b/wagner-sousa/tech2human/tech2human)
-![agentskills.io](https://img.shields.io/badge/agentskills.io-compatible-FF6B35?style=for-the-badge&logo=bookstack&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![skills.sh](https://skills.sh/b/wagner-sousa/tech2human)
+![agentskills.io](https://img.shields.io/badge/agentskills.io-compatible-000000?logo=agentskills)
 
 ![Tech2Human cover](assets/cover.jpg)
 
